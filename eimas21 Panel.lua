@@ -1,4 +1,4 @@
---// Neon Executor GUI with Pages, FPS Booster, Fly, WalkFling, Noclip, Invis, Safe Mode, Heal, Respawn
+--// Xke8F Panel - Clean GUI with Toggles, Pages, FPS Booster, Fly, WalkFling, Noclip, Invis, Safe Mode, Heal, Respawn
 
 --== Services ==--
 local Players = game:GetService("Players")
@@ -6,143 +6,250 @@ local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local Workspace = game:GetService("Workspace")
+local TweenService = game:GetService("TweenService")
 
 local lp = Players.LocalPlayer
 
---== GUI Creation ==--
+--== GUI Creation (B1 Clean Flat Style) ==--
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NeonExecutorGui"
 ScreenGui.Parent = game.CoreGui
 
 local Frame = Instance.new("Frame")
 Frame.Parent = ScreenGui
-Frame.Size = UDim2.new(0, 260, 0, 420)
-Frame.Position = UDim2.new(0.05, 0, 0.2, 0)
-Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+Frame.Size = UDim2.new(0, 460, 0, 520)
+Frame.Position = UDim2.new(0.5, -230, 0.5, -260)
+Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Frame.BorderSizePixel = 0
 
-local FrameCorner = Instance.new("UICorner")
-FrameCorner.CornerRadius = UDim.new(0, 10)
-FrameCorner.Parent = Frame
-
-local Stroke = Instance.new("UIStroke")
-Stroke.Thickness = 2
-Stroke.Color = Color3.fromRGB(0, 255, 200)
-Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-Stroke.Parent = Frame
-
+-- Title Bar
 local TitleBar = Instance.new("Frame")
 TitleBar.Parent = Frame
-TitleBar.Size = UDim2.new(1, 0, 0, 30)
-TitleBar.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+TitleBar.Size = UDim2.new(1, 0, 0, 40)
+TitleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 TitleBar.BorderSizePixel = 0
-
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 10)
-TitleCorner.Parent = TitleBar
 
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = TitleBar
-TitleLabel.Size = UDim2.new(1, -10, 1, 0)
-TitleLabel.Position = UDim2.new(0, 5, 0, 0)
+TitleLabel.Size = UDim2.new(1, -40, 1, 0)
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Xke8F Panel"
-TitleLabel.TextColor3 = Color3.fromRGB(0, 255, 200)
+TitleLabel.Text = "Xke8F PANEL"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextSize = 16
+TitleLabel.TextSize = 18
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
---== Page Containers ==--
-local Page1 = Instance.new("Frame")
-Page1.Parent = Frame
-Page1.Size = UDim2.new(1, -20, 1, -50)
-Page1.Position = UDim2.new(0, 10, 0, 40)
-Page1.BackgroundTransparency = 1
+-- Close Button (C1)
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = TitleBar
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -35, 0.5, -15)
+CloseButton.BackgroundTransparency = 1
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 18
 
-local Page2 = Instance.new("Frame")
+CloseButton.MouseEnter:Connect(function()
+    CloseButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+end)
+
+CloseButton.MouseLeave:Connect(function()
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    Frame.Visible = false
+end)
+
+-- Section Header
+local SectionLabel = Instance.new("TextLabel")
+SectionLabel.Parent = Frame
+SectionLabel.Size = UDim2.new(1, -20, 0, 30)
+SectionLabel.Position = UDim2.new(0, 10, 0, 50)
+SectionLabel.BackgroundTransparency = 1
+SectionLabel.Text = "FEATURES"
+SectionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+SectionLabel.Font = Enum.Font.GothamBold
+SectionLabel.TextSize = 16
+SectionLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Page Containers
+local Page1 = Instance.new("ScrollingFrame")
+Page1.Parent = Frame
+Page1.Size = UDim2.new(1, -20, 1, -140)
+Page1.Position = UDim2.new(0, 10, 0, 90)
+Page1.BackgroundTransparency = 1
+Page1.ScrollBarThickness = 6
+Page1.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+local Page2 = Instance.new("ScrollingFrame")
 Page2.Parent = Frame
-Page2.Size = UDim2.new(1, -20, 1, -50)
-Page2.Position = UDim2.new(0, 10, 0, 40)
+Page2.Size = UDim2.new(1, -20, 1, -140)
+Page2.Position = UDim2.new(0, 10, 0, 90)
 Page2.BackgroundTransparency = 1
+Page2.ScrollBarThickness = 6
+Page2.CanvasSize = UDim2.new(0, 0, 0, 0)
 Page2.Visible = false
 
+-- Auto Layout
 local function MakeList(parent)
     local layout = Instance.new("UIListLayout")
     layout.Parent = parent
-    layout.Padding = UDim.new(0, 6)
+    layout.Padding = UDim.new(0, 8)
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     layout.SortOrder = Enum.SortOrder.LayoutOrder
 
     local pad = Instance.new("UIPadding")
     pad.Parent = parent
     pad.PaddingTop = UDim.new(0, 4)
+
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        parent.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 10)
+    end)
 end
 
 MakeList(Page1)
 MakeList(Page2)
 
+-- Fade hover helper (A1)
+local function AddFadeHover(guiObject, baseColor, hoverColor, time)
+    guiObject.MouseEnter:Connect(function()
+        TweenService:Create(guiObject, TweenInfo.new(time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = hoverColor
+        }):Play()
+    end)
+    guiObject.MouseLeave:Connect(function()
+        TweenService:Create(guiObject, TweenInfo.new(time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = baseColor
+        }):Play()
+    end)
+end
+
+-- Button Maker (normal buttons)
 local function MakeButton(text, parent)
     local b = Instance.new("TextButton")
     b.Parent = parent
-    b.Size = UDim2.new(1, 0, 0, 32)
-    b.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
-    b.TextColor3 = Color3.fromRGB(220, 255, 255)
+    b.Size = UDim2.new(1, -10, 0, 36)
+    b.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    b.TextColor3 = Color3.fromRGB(255, 255, 255)
     b.Font = Enum.Font.Gotham
     b.TextSize = 14
     b.Text = text
     b.AutoButtonColor = false
+    b.BorderSizePixel = 0
 
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6)
-    corner.Parent = b
-
-    local stroke = Instance.new("UIStroke")
-    stroke.Thickness = 1
-    stroke.Color = Color3.fromRGB(0, 200, 255)
-    stroke.Parent = b
-
-    b.MouseEnter:Connect(function()
-        b.BackgroundColor3 = Color3.fromRGB(30, 30, 55)
-    end)
-
-    b.MouseLeave:Connect(function()
-        b.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
-    end)
+    AddFadeHover(b, Color3.fromRGB(40, 40, 40), Color3.fromRGB(55, 55, 55), 0.12)
 
     return b
 end
 
---== Page 1 Buttons ==--
+-- Toggle Maker (T2 sliding switch)
+local function MakeToggle(text, parent, callback)
+    local container = Instance.new("Frame")
+    container.Parent = parent
+    container.Size = UDim2.new(1, -10, 0, 36)
+    container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    container.BorderSizePixel = 0
+
+    AddFadeHover(container, Color3.fromRGB(40, 40, 40), Color3.fromRGB(55, 55, 55), 0.12)
+
+    local label = Instance.new("TextLabel")
+    label.Parent = container
+    label.Size = UDim2.new(1, -70, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+
+    local switch = Instance.new("Frame")
+    switch.Parent = container
+    switch.Size = UDim2.new(0, 40, 0, 18)
+    switch.Position = UDim2.new(1, -50, 0.5, -9)
+    switch.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    switch.BorderSizePixel = 0
+
+    local knob = Instance.new("Frame")
+    knob.Parent = switch
+    knob.Size = UDim2.new(0, 16, 0, 16)
+    knob.Position = UDim2.new(0, 1, 0, 1)
+    knob.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+    knob.BorderSizePixel = 0
+
+    local state = false
+
+    local function SetState(on)
+        state = on
+        local targetPos = on and UDim2.new(1, -17, 0, 1) or UDim2.new(0, 1, 0, 1)
+        local targetColor = on and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(80, 80, 80)
+
+        TweenService:Create(switch, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = targetColor
+        }):Play()
+
+        TweenService:Create(knob, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Position = targetPos
+        }):Play()
+
+        if callback then
+            callback(state)
+        end
+    end
+
+    local clickArea = Instance.new("TextButton")
+    clickArea.Parent = container
+    clickArea.Size = UDim2.new(1, 0, 1, 0)
+    clickArea.Position = UDim2.new(0, 0, 0, 0)
+    clickArea.BackgroundTransparency = 1
+    clickArea.Text = ""
+
+    clickArea.MouseButton1Click:Connect(function()
+        SetState(not state)
+    end)
+
+    return {
+        SetState = SetState,
+        GetState = function() return state end,
+        Container = container
+    }
+end
+
+-- Page 1: Buttons + Toggles
 local playBtn      = MakeButton("Play Sound", Page1)
 local stopBtn      = MakeButton("Stop Sound", Page1)
-local flyBtn       = MakeButton("Fly", Page1)
-local walkflingBtn = MakeButton("WalkFling", Page1)
-local noclipBtn    = MakeButton("Noclip", Page1)
-local unnoclipBtn  = MakeButton("Un-Noclip", Page1)
-local invisBtn     = MakeButton("Invisible", Page1)
-local uninvisBtn   = MakeButton("Un-Invisible", Page1)
-local safeModeBtn  = MakeButton("Safe Mode (Toggle)", Page1)
-local healBtn      = MakeButton("Self-Heal", Page1)
-local respawnBtn   = MakeButton("Respawn", Page1)
-local nextPageBtn  = MakeButton("Next Page →", Page1)
 
---== Page 2 Buttons ==--
-local fpsBtn       = MakeButton("FPS Booster", Page2)
-local backBtn      = MakeButton("← Back", Page2)
+local flyToggle
+local walkflingToggle
+local noclipToggle
+local invisToggle
+local safeModeToggle
 
---== ANIMATION BUTTON ==--
-local animBtn      = MakeButton("Play Animation", Page2)
+local healBtn
+local respawnBtn
+local nextPageBtn
 
---== Page Switching ==--
-nextPageBtn.MouseButton1Click:Connect(function()
-    Page1.Visible = false
-    Page2.Visible = true
-end)
+-- Page 2 Buttons
+local fpsBtn
+local animBtn
+local backBtn
 
-backBtn.MouseButton1Click:Connect(function()
-    Page2.Visible = false
-    Page1.Visible = true
-end)
+-- Bottom Button
+local BottomButton = Instance.new("TextButton")
+BottomButton.Parent = Frame
+BottomButton.Size = UDim2.new(1, -20, 0, 40)
+BottomButton.Position = UDim2.new(0, 10, 1, -50)
+BottomButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+BottomButton.Text = "EXECUTE PANEL"
+BottomButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+BottomButton.Font = Enum.Font.GothamBold
+BottomButton.TextSize = 16
+BottomButton.BorderSizePixel = 0
+
+AddFadeHover(BottomButton, Color3.fromRGB(60, 60, 60), Color3.fromRGB(80, 80, 80), 0.12)
 
 --== Draggable Frame ==--
 local dragging = false
@@ -193,8 +300,25 @@ local flying = false
 local flyVel, flyGyro
 local flySpeed = 60
 
-flyBtn.MouseButton1Click:Connect(function()
-    flying = not flying
+--== WalkFling ==--
+local walkfling = false
+local flingPart
+local followConnection
+local touchConnection
+
+--== Noclip ==--
+local noclip = false
+
+--== Invisible ==--
+local invisibleOn = false
+
+--== Safe Mode ==--
+local safeMode = false
+local safeConnection
+
+-- Fly toggle
+flyToggle = MakeToggle("Fly", Page1, function(on)
+    flying = on
     local char = lp.Character
     if not char then return end
     local hrp = char:FindFirstChild("HumanoidRootPart")
@@ -235,14 +359,9 @@ flyBtn.MouseButton1Click:Connect(function()
     end
 end)
 
---== WalkFling ==--
-local walkfling = false
-local flingPart
-local followConnection
-local touchConnection
-
-walkflingBtn.MouseButton1Click:Connect(function()
-    walkfling = not walkfling
+-- WalkFling toggle (fixed so it doesn't fling you)
+walkflingToggle = MakeToggle("WalkFling", Page1, function(on)
+    walkfling = on
 
     local char = lp.Character
     if not char then return end
@@ -250,35 +369,36 @@ walkflingBtn.MouseButton1Click:Connect(function()
     if not hrp then return end
 
     if walkfling then
+        -- Create invisible detection part
         flingPart = Instance.new("Part")
-        flingPart.Size = Vector3.new(4, 4, 4)
+        flingPart.Size = Vector3.new(6, 6, 6)
         flingPart.Transparency = 1
         flingPart.CanCollide = false
+        flingPart.Anchored = false
         flingPart.Massless = true
         flingPart.Parent = workspace
-        flingPart.Name = "FlingCore"
+        flingPart.Name = "VelocityFlingDetector"
 
-        local bav = Instance.new("BodyAngularVelocity")
-        bav.AngularVelocity = Vector3.new(0, 999999, 0)
-        bav.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
-        bav.Parent = flingPart
-
+        -- Follow player
         followConnection = RunService.Heartbeat:Connect(function()
             if flingPart and hrp and hrp.Parent then
-                flingPart.CFrame = hrp.CFrame
+                flingPart.CFrame = hrp.CFrame * CFrame.new(0, 0, -3)
             end
         end)
 
+        -- Apply velocity to others
         touchConnection = flingPart.Touched:Connect(function(hit)
+            if hit:IsDescendantOf(char) then return end -- ignore yourself
+
             local otherChar = hit.Parent
-            if not otherChar or otherChar == char then return end
-            local otherHRP = otherChar:FindFirstChild("HumanoidRootPart")
+            local otherHRP = otherChar and otherChar:FindFirstChild("HumanoidRootPart")
             if otherHRP then
-                otherHRP.Velocity = Vector3.new(0, 0, 0)
+                    otherHRP.Velocity = Vector3.new(0, 0, 0)
                 task.wait()
-                otherHRP.Velocity = hrp.CFrame.LookVector * 300 + Vector3.new(0, 200, 0)
+                otherHRP.Velocity = hrp.CFrame.LookVector * 500 + Vector3.new(0, 300, 0)
             end
         end)
+
     else
         if followConnection then followConnection:Disconnect() followConnection = nil end
         if touchConnection then touchConnection:Disconnect() touchConnection = nil end
@@ -286,54 +406,27 @@ walkflingBtn.MouseButton1Click:Connect(function()
     end
 end)
 
---== Noclip ==--
-local noclip = false
 
-noclipBtn.MouseButton1Click:Connect(function()
-    noclip = true
+-- Noclip toggle
+noclipToggle = MakeToggle("Noclip", Page1, function(on)
+    noclip = on
 end)
 
-unnoclipBtn.MouseButton1Click:Connect(function()
-    noclip = false
-end)
-
-RunService.Stepped:Connect(function()
-    if noclip and lp.Character then
-        for _, v in pairs(lp.Character:GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.CanCollide = false
-            end
-        end
-    end
-end)
-
---== Invisible ==--
-invisBtn.MouseButton1Click:Connect(function()
+-- Invisible toggle
+invisToggle = MakeToggle("Invisible", Page1, function(on)
+    invisibleOn = on
     local char = lp.Character
     if not char then return end
     for _, v in pairs(char:GetDescendants()) do
         if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
-            v.Transparency = 1
+            v.Transparency = invisibleOn and 1 or 0
         end
     end
 end)
 
-uninvisBtn.MouseButton1Click:Connect(function()
-    local char = lp.Character
-    if not char then return end
-    for _, v in pairs(char:GetDescendants()) do
-        if v:IsA("BasePart") then
-            v.Transparency = 0
-        end
-    end
-end)
-
---== Safe Mode ==--
-local safeMode = false
-local safeConnection
-
-safeModeBtn.MouseButton1Click:Connect(function()
-    safeMode = not safeMode
+-- Safe Mode toggle
+safeModeToggle = MakeToggle("Safe Mode", Page1, function(on)
+    safeMode = on
 
     if safeMode then
         safeConnection = RunService.Heartbeat:Connect(function()
@@ -353,22 +446,33 @@ safeModeBtn.MouseButton1Click:Connect(function()
 
             hum.PlatformStand = false
         end)
-
-        if not Frame:FindFirstChild("SafeGlow") then
-            local glow = Instance.new("UIStroke")
-            glow.Name = "SafeGlow"
-            glow.Thickness = 3
-            glow.Color = Color3.fromRGB(0, 255, 120)
-            glow.Parent = Frame
-        end
     else
         if safeConnection then safeConnection:Disconnect() safeConnection = nil end
-        local glow = Frame:FindFirstChild("SafeGlow")
-        if glow then glow:Destroy() end
     end
 end)
 
---== Self-Heal ==--
+-- Self-Heal, Respawn, Next Page
+healBtn = MakeButton("Self-Heal", Page1)
+respawnBtn = MakeButton("Respawn", Page1)
+nextPageBtn = MakeButton("Next Page →", Page1)
+
+-- Page 2: FPS, Animation, Back
+fpsBtn = MakeButton("FPS Booster", Page2)
+animBtn = MakeButton("Play Animation", Page2)
+backBtn = MakeButton("← Back", Page2)
+
+-- Noclip loop
+RunService.Stepped:Connect(function()
+    if noclip and lp.Character then
+        for _, v in pairs(lp.Character:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+    end
+end)
+
+-- Self-Heal
 healBtn.MouseButton1Click:Connect(function()
     local char = lp.Character
     if not char then return end
@@ -378,7 +482,7 @@ healBtn.MouseButton1Click:Connect(function()
     end
 end)
 
---== Respawn ==--
+-- Respawn
 respawnBtn.MouseButton1Click:Connect(function()
     local plr = game.Players.LocalPlayer
 
@@ -390,7 +494,7 @@ respawnBtn.MouseButton1Click:Connect(function()
     plr:LoadCharacter()
 end)
 
---== FPS BOOSTER ==--
+-- FPS BOOSTER
 fpsBtn.MouseButton1Click:Connect(function()
     for _, v in pairs(Workspace:GetDescendants()) do
         if v:IsA("Texture") or v:IsA("Decal") then
@@ -415,6 +519,7 @@ fpsBtn.MouseButton1Click:Connect(function()
     Workspace.Terrain.Decoration = false
 end)
 
+-- Animation
 animBtn.MouseButton1Click:Connect(function()
     local char = lp.Character
     if not char then return end
@@ -423,14 +528,24 @@ animBtn.MouseButton1Click:Connect(function()
     if not hum then return end
 
     local anim = Instance.new("Animation")
-    anim.AnimationId = "rbxassetid://507776043" -- Dance 2 (you can change this)
+    anim.AnimationId = "rbxassetid://136230267630603" -- Dance 2
 
     local track = hum:LoadAnimation(anim)
     track:Play()
 end)
 
+-- Page Switching
+nextPageBtn.MouseButton1Click:Connect(function()
+    Page1.Visible = false
+    Page2.Visible = true
+end)
 
---== Keybind K to hide/show GUI ==--
+backBtn.MouseButton1Click:Connect(function()
+    Page2.Visible = false
+    Page1.Visible = true
+end)
+
+-- Keybind K to hide/show GUI
 local hidden = false
 
 UIS.InputBegan:Connect(function(input, gp)
@@ -440,4 +555,3 @@ UIS.InputBegan:Connect(function(input, gp)
         Frame.Visible = not hidden
     end
 end)
-
